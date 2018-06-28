@@ -1,19 +1,26 @@
-NAME := vhdl_experiments
-ALL_FILES := $(wildcard src/*.vhdl)
+NAME := hello_world
 
-GHDL_FLAGS := --std=02 --work=${NAME}
+SRC_FILES := $(wildcard src/*.vhdl)
+OBJ_FILES := $(patsubst src/%.vhdl,%.o,${SRC_FILES})
+
+GHDL_FLAGS := --std=02
 
 all: ${NAME}
 
-${NAME}: ${ALL_FILES}
-	ghdl -a ${GHDL_FLAGS} ${ALL_FILES}
+%.o: src/%.vhdl
+	ghdl -a ${GHDL_FLAGS} $<
 
-test: lint
+${NAME}: ${OBJ_FILES}
+	ghdl -e ${GHDL_FLAGS} ${NAME}
+
+test: lint ${NAME}
+	ghdl -r ${GHDL_FLAGS} ${NAME}
 
 lint: ${ALL_FILES}
 	ghdl -s ${GHDL_FLAGS} ${ALL_FILES}
 
 clean:
-	find '(' -name '*.o' -o -name "${NAME}-*.cf" ')' -delete
+	ghdl --clean
+	find '(' -name '*.o' -o -name '*.cf' ')' -delete
 
 .PHONY: all clean test clean
