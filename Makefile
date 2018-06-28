@@ -1,4 +1,4 @@
-NAME := vhdl-experiments
+NAME := vhdl_experiments
 ALL_FILES := $(wildcard src/*.vhdl)
 
 GHDL_FLAGS := --std=02 --work=${NAME}
@@ -6,14 +6,14 @@ GHDL_FLAGS := --std=02 --work=${NAME}
 all: ${NAME}
 
 ${NAME}: ${ALL_FILES}
-	ghdl -a ${ALL_FILES}
+	ghdl -a ${GHDL_FLAGS} ${ALL_FILES}
 
 test: lint
 
 lint: ${ALL_FILES}
-	ghdl ${GHDL_FLAGS} -s ${ALL_FILES}
+	ghdl -s ${GHDL_FLAGS} ${ALL_FILES}
 
 clean:
-	find '(' -name '*.o' -o -name 'work-*.cf' ')' -delete
+	find '(' -name '*.o' -o -name "${NAME}-*.cf" ')' -delete
 
 .PHONY: all clean test clean
